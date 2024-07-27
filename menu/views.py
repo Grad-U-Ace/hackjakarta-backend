@@ -25,7 +25,7 @@ class MenuViewSet(viewsets.ModelViewSet):
     serializer_class = MenuSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = MenuFilter
-    ordering_fields = ['menu_name', 'price', 'buy_count', 'restaurant__restaurant_name']
+    ordering_fields = ['menu_name', 'price', 'buy_count', 'restaurant__restaurant_name', 'restaurant__distance']
     ordering = ['menu_name']
 
 class RestaurantMenuViewSet(MenuViewSet):

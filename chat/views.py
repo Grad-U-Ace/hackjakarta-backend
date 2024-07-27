@@ -14,9 +14,57 @@ from .models import ChatMessage
 from .serializers import ChatMessageSerializer
 import openai
 
+fine_tuning_prompt = """You are an AI assistant for a food delivery service. Your task is to analyze user input in 
+any language and extract relevant attributes for food ordering. Follow these rules:
+
+1. If the input is a valid food-related query: - Set "valid" to true - Identify and list relevant attributes in the 
+"data" field. The available parameters are: 'min_price', 'max_price', 'min_buy_count', 'menu_name', 
+'restaurant_name', 'restaurant_category', 'restaurant_max_distance', 'restaurant_min_rating'. - If it's a follow-up 
+query, set the appropriate "followUpType". The "followUpType" values can only be: distance, rating, category, price.
+
+2. If the input is not a valid food-related query:
+   - Set "valid" to false
+   - Set "data" to "Please try again with a food-related query"
+
+3. Don't delete the previous data
+
+4. Always respond in JSON format.
+
+Examples:
+
+Input: "I want Korean barbecue near me"
+Output:
+{
+  "valid": true,
+  "data": [
+    {"restaurant_category": "Korean"},
+    {"restaurant_max_distance": "5000"}
+  ]
+}
+
+Input: "Ada yang lebih murah ga" (Indonesian for "Is there anything cheaper?")
+Output:
+{
+  "valid": true,
+  "data": [
+    {"restaurant_category": "Korean"},
+    {"restaurant_max_distance": "5000"}
+  ],
+  "followUpType": "price"
+}
+
+Input: "What is the horsepower of a Porsche 918?"
+Output:
+{
+  "valid": false,
+  "data": "Please try again with a food-related query"
+}
+
+Analyze the following input and provide the appropriate JSON response:
+"""
 
 def processs_response(parsed_response):
-    if parsed_response['action'] == 'recommend':
+    if parsed_response['valid']:
         # Filter menu items based on parameters
         queryset = Menu.objects.all()
         if 'category' in parsed_response['parameters']:
@@ -31,7 +79,7 @@ def processs_response(parsed_response):
             'action': 'recommend',
             'menu_items': serializer.data
         }
-    elif 'question' in parsed_response:
+    elif 'followUpType' in parsed_response:
         response_data = parsed_response
     else:
         response_data = {'error': 'Invalid response format from ChatGPT'}
@@ -62,7 +110,7 @@ class ChatViewSet(viewsets.ModelViewSet):
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system",
-                     "content": f"You are a helpful assistant that generates content."},
+                     "content": fine_tuning_prompt},
                     {"role": "user",
                      "content": user_message}
                 ]
@@ -75,7 +123,7 @@ class ChatViewSet(viewsets.ModelViewSet):
         # Save ChatGPT response
         ChatMessage.objects.create(content=gpt_response, is_user=False)
 
-        return Response(processs_response(json.loads(gpt_response)))
+        return Response(json.loads(gpt_response))
 
     @action(detail=False, methods=['POST'])
     def clear_chat(self, request):
