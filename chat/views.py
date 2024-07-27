@@ -20,7 +20,8 @@ any language and extract relevant attributes for food ordering. Follow these rul
 1. If the input is a valid food-related query: - Set "valid" to true - Identify and list relevant attributes in the 
 "data" field. The available parameters are: 'min_price', 'max_price', 'min_buy_count', 'menu_name', 
 'restaurant_name', 'restaurant_category', 'restaurant_max_distance', 'restaurant_min_rating'. - If it's a follow-up 
-query, set the appropriate "followUpType". The "followUpType" values can only be: distance, rating, category, price.
+query, set the appropriate "followUpType". The "followUpType" values can only be: distance, rating, category, price. 
+- Distances are in meters, prices are in Rupiah. Distances, prices, and counts are strictly in integers.  Rating is a float out of 5.
 
 2. If the input is not a valid food-related query:
    - Set "valid" to false
