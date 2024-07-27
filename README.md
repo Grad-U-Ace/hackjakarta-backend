@@ -37,3 +37,5 @@ Watch our [Demo Video](https://) to see the chatbot in action.
 - **Ads for Merchants:** Integrate ad placements within recommendations to allow merchants to promote specific dishes or offers.
 - **User Trend Analysis and Recommendations:** Develop a reporting feature to provide merchants with insights into popular keywords and trends based on user inputs, along with actionable AI-powered recommendations to help merchants align their offerings with current demand.
 - **Mood-Based Recommendations:** Enhance the chatbot to provide suggestions based on user moods, making recommendations more contextually relevant.
+- **Jaccard Index-Based Recommendations:** Use the Jaccard Index to analyze the similarity between a user's order history and other users' histories, providing personalized food recommendations.
+- **Integration with GrabFamily:** Enhance the chatbot to prompt meal decisions for other family members.
