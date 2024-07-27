@@ -1,19 +1,28 @@
 from rest_framework import serializers
-
-from menu.models import Menu, Restaurant
+from .models import Restaurant, Menu
 
 
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
-        fields = ['id', 'menu_name', 'restaurant', 'price', 'description', 'buy_count']
+        fields = ['id', 'menu_name', 'price', 'description', 'buy_count']
 
 
 class RestaurantSerializer(serializers.ModelSerializer):
-    menus = MenuSerializer(many=True)
-
     class Meta:
         model = Restaurant
-        fields = ['id', 'restaurant_name', 'category', 'distance', 'rating', 'avatar', 'menus']
+        fields = ['id', 'restaurant_name', 'category', 'distance', 'rating', 'avatar']
 
 
+class MenuWithRestaurantSerializer(MenuSerializer):
+    restaurant = RestaurantSerializer(read_only=True)
+
+    class Meta(MenuSerializer.Meta):
+        fields = MenuSerializer.Meta.fields + ['restaurant']
+
+
+class RestaurantWithMenusSerializer(RestaurantSerializer):
+    menus = MenuSerializer(many=True, read_only=True)
+
+    class Meta(RestaurantSerializer.Meta):
+        fields = RestaurantSerializer.Meta.fields + ['menus']
