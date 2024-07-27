@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from openai import OpenAI
 
@@ -5,9 +7,39 @@ from openai import OpenAI
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from menu.models import Menu
+from menu.serializers import MenuSerializer
 from .models import ChatMessage
 from .serializers import ChatMessageSerializer
 import openai
+
+
+def processs_response(parsed_response):
+    if parsed_response['action'] == 'recommend':
+        # Filter menu items based on parameters
+        queryset = Menu.objects.all()
+        if 'category' in parsed_response['parameters']:
+            queryset = queryset.filter(restaurant__category=parsed_response['parameters']['category'])
+        if 'ordering' in parsed_response['parameters']:
+            queryset = queryset.order_by(parsed_response['parameters']['ordering'])
+
+        # Limit to top 5 results
+        menu_items = queryset[:5]
+        serializer = MenuSerializer(menu_items, many=True)
+        response_data = {
+            'action': 'recommend',
+            'menu_items': serializer.data
+        }
+    elif 'question' in parsed_response:
+        response_data = parsed_response
+    else:
+        response_data = {'error': 'Invalid response format from ChatGPT'}
+
+        # Save ChatGPT response
+    ChatMessage.objects.create(content=json.dumps(response_data), is_user=False)
+
+    return Response(response_data)
 
 
 class ChatViewSet(viewsets.ModelViewSet):
@@ -41,13 +73,9 @@ class ChatViewSet(viewsets.ModelViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Save ChatGPT response
-        print(gpt_response)
         ChatMessage.objects.create(content=gpt_response, is_user=False)
 
-        return Response({
-            'user_message': user_message,
-            'gpt_response': gpt_response
-        })
+        return Response(processs_response(json.loads(gpt_response)))
 
     @action(detail=False, methods=['POST'])
     def clear_chat(self, request):
