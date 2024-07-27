@@ -5,7 +5,11 @@ Powered by the magical Django Rest Framework.
 ## Background
 
 ## Development Guide
-1. Migrate the database
+1. Create a `.env` on the project root with the following keys:
+   ```shell
+   OPENAI_API_KEY=
+   ```
+2. Migrate the database
     ```shell
     python3 manage.py makemigrations
     python3 manage.py migrate
