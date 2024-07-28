@@ -30,6 +30,10 @@ The GrabFood Chatbot aims to revolutionize the food ordering experience by offer
     python3 manage.py runserver
     ```
 
+## Tech Stack
+- **Django:** We chose Django for its rapid development capabilities, scalability for high loads, and extensive community resources. It provides a powerful foundation for efficient development and maintenance.
+- **Cloud Run:** For deployment, we chose Cloud Run because of its automatic scaling, serverless architecture, cost-effectiveness, quick containerized app deployment, and seamless GCP integration. It offers a flexible, efficient hosting solution that grows with our needs.
+  
 ## Demo
 Watch our [Demo Video](https://) to see the chatbot in action.
 
