@@ -64,6 +64,7 @@ Output:
 Analyze the following input and provide the appropriate JSON response:
 """
 
+
 def processs_response(parsed_response):
     if parsed_response['valid']:
         # Filter menu items based on parameters
@@ -104,17 +105,24 @@ class ChatViewSet(viewsets.ModelViewSet):
         # Save user message
         ChatMessage.objects.create(content=user_message, is_user=True)
 
+        chats = ChatMessage.objects.all()
+
+        messages = [{"role": "system", "content": fine_tuning_prompt}, ]
+
+        for chat in chats:
+            if chat.is_user:
+                messages.append({"role": "user", "content": chat.content})
+            else:
+                messages.append({"role": "assistant", "content": chat.content})
+
+        messages.append({"role": "user", "content": user_message})
+
         # Get ChatGPT response
         try:
             client = OpenAI()
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system",
-                     "content": fine_tuning_prompt},
-                    {"role": "user",
-                     "content": user_message}
-                ]
+                messages=messages
             )
             gpt_response = response.choices[0].message.content.strip()
 
