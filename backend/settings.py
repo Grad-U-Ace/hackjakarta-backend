@@ -25,7 +25,7 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-1ue9d-ht15b9j$oz5&fe0)6ljzhl73**hq8y#)dyt*=e$y=u%u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -107,6 +107,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('PG_NAME'),
+            'USER': os.getenv('PG_USER'),
+            'PASSWORD': os.getenv('PG_PASSWORD'),
+            'HOST': os.getenv('PG_HOST'),
+            'PORT': os.getenv('PG_PORT'),
+        }
+    }
 
 
 # Password validation

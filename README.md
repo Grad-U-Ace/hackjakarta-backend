@@ -11,9 +11,18 @@ The GrabFood Chatbot aims to revolutionize the food ordering experience by offer
 - **Advanced Filtering:** Refine searches by cuisine, user's review, and more.
 - **Merchant Visibility:** Small merchants featured in recommendations to increase their exposure.
 
+## Testing Guide
+
+Live backend are accessible [here](https://grabin-food-be-kv422ek6cq-et.a.run.app/).
+
+Powered by Google Cloud Run.
+
+API Docs: https://grabin-food-be-kv422ek6cq-et.a.run.app/api/schema/swagger-ui/
+
 ## Development Guide
 1. Create a `.env` on the project root with the following keys:
    ```shell
+   DEBUG=True
    OPENAI_API_KEY=
    ```
 2. Migrate the database
@@ -29,6 +38,30 @@ The GrabFood Chatbot aims to revolutionize the food ordering experience by offer
     ```shell
     python3 manage.py runserver
     ```
+   
+The app is containerized. For production purposes, we can set up a connection to a more persistent database of choice in settings. Mind the credentials.
+
+#### Example: Postgres
+
+1. The following environment variables need to be set (lcoally in a `.env` file):
+   ```shell
+   DEBUG=False
+   OPENAI_API_KEY=
+   
+   PG_NAME=
+   PG_USER=
+   PG_PASSWORD=
+   PG_HOST=
+   PG_PORT=
+   ```
+2. Build the image
+   ```shell
+   docker build . -t grabin-food-be
+   ```
+3. The build image can be run locally, pushed to docker hub, or run anywhere. To run locally, do:
+   ```shell
+   docker run -d -p 8000:8000 --name grabin-food-be --env-file=.env  grabin-food-be
+   ```
 
 ## Demo
 Watch our [Demo Video](https://) to see the chatbot in action.
