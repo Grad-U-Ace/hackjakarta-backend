@@ -25,7 +25,7 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-1ue9d-ht15b9j$oz5&fe0)6ljzhl73**hq8y#)dyt*=e$y=u%u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG') == 'True'
+DEBUG = os.getenv('DEBUG', default=True)
 
 ALLOWED_HOSTS = ['*']
 
@@ -55,8 +55,10 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+    'TITLE': 'Grabin Food API',
+    'DESCRIPTION': 'The GrabFood Chatbot aims to revolutionize the food ordering experience by offering personalized '
+                   'recommendations to users and actionable insights to merchants. Leveraging AI, this chatbot '
+                   'enhances user engagement, reduces bounce rates, and drives economic growth for merchants.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
