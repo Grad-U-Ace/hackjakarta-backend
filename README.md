@@ -1,7 +1,7 @@
 # Grad-U-Ace' Hack Jakarta Backend
 ## GrabFood Chatbot
 
-Powered by the magical Django Rest Framework.
+Powered by the magical Django Framework with OpenAI's API.
 
 ## Project Overview
 The GrabFood Chatbot aims to revolutionize the food ordering experience by offering personalized recommendations to users and actionable insights to merchants. Leveraging AI, this chatbot enhances user engagement, reduces bounce rates, and drives economic growth for merchants.
@@ -66,6 +66,7 @@ The app is containerized. For production purposes, we can set up a connection to
 ## Tech Stack
 - **Django:** We chose Django for its rapid development capabilities, scalability for high loads, and extensive community resources. It provides a powerful foundation for efficient development and maintenance.
 - **Cloud Run:** For deployment, we chose Cloud Run because of its automatic scaling, serverless architecture, cost-effectiveness, quick containerized app deployment, and seamless GCP integration. It offers a flexible, efficient hosting solution that grows with our needs.
+- **OpenAI:** For our current use case, we are utilizing OpenAI's API to process our chats as a proof of concept. For future developments, we are aiming to develop our own Machine Learning Models.
   
 ## Demo
 Watch our [Demo Video](https://) to see the chatbot in action.
